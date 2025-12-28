@@ -2,6 +2,7 @@ import pandas as pd
 import os
 from sklearn.model_selection import train_test_split
 import logging
+import yaml
 
 ## Ensure the log dir exist
 log_dir="logs"
@@ -64,9 +65,23 @@ def save_data(train_data:pd.DataFrame,test_data:pd.DataFrame,data_path:str)->Non
         logger.error(f"Unexpected error occured while saving train split data: {e}")
         raise
 
+def load_params(params_path:str)->dict:
+    """Load parameters from yaml file."""
+    try:
+        with open(params_path,"r") as file:
+            params=yaml.safe_load(file)
+        logger.debug(f"Parameter retrived from {params_path}")
+        return params
+    except yaml.YAMLError as e:
+        logger.error(f"YAML Error {e}")
+        raise
+    except Exception as e:
+        logger.error(f"unexpected Error {e}")
+        raise
+
 def main():
     try:
-        test_size=0.2
+        test_size=load_params("params.yaml")["data_ingestion"]["test_size"]
         data_path="https://raw.githubusercontent.com/vikashishere/Datasets/main/spam.csv"
         df=load_data(data_url=data_path)
         final_df=preprocess_data(df=df)
