@@ -1,0 +1,10 @@
+pandas
+numpy
+scikit-learn
+nltk
+logging
+yaml
+dvc
+dvclive
+awscli
+dvc-s3
